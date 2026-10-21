@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1020">
+<title>SearchPilot AI — Web Search API</title>
+<style>
+:root{color-scheme:dark;--bg:#080c18;--panel:#10172a;--panel2:#141d33;--line:#273450;--text:#edf3ff;--muted:#9baac5;--cyan:#6ee7f9;--blue:#7c9cff;--green:#5ee6a8;--red:#ff7f91}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(900px 500px at 80% -10%,#20356a66,transparent 70%),radial-gradient(700px 400px at -10% 15%,#0c647055,transparent 70%),var(--bg);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;color:var(--text)}
+.wrap{max-width:1180px;margin:auto;padding:28px 20px 60px}.top{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:30px}.brand{display:flex;align-items:center;gap:12px;font-weight:800;font-size:18px;letter-spacing:-.4px}.logo{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,#67e8f9,#818cf8);color:#071222;font-size:21px;box-shadow:0 8px 30px #4c83ff30}.status{font-size:12px;color:var(--green);border:1px solid #2e735d;background:#102b2a;padding:7px 11px;border-radius:999px;white-space:nowrap}.hero{text-align:center;max-width:800px;margin:0 auto 28px}.eyebrow{color:var(--cyan);font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase}.hero h1{font-size:clamp(32px,5vw,54px);line-height:1.07;letter-spacing:-1.8px;margin:12px 0}.hero h1 span{background:linear-gradient(90deg,#7be8fa,#9daeff);-webkit-background-clip:text;background-clip:text;color:transparent}.hero p{color:var(--muted);max-width:650px;margin:0 auto}.layout{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}.panel{background:linear-gradient(180deg,#131b30f2,#0f1627f2);border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 16px 50px #0002}.panel.full{grid-column:1/-1}.panel-head{display:flex;align-items:center;gap:11px;margin-bottom:16px}.step{width:32px;height:32px;display:grid;place-items:center;border-radius:10px;background:#1a2b49;color:var(--cyan);font-weight:800}.panel h2{font-size:17px;margin:0}.sub{font-size:12px;color:var(--muted);margin-top:3px}.field{display:block;margin:14px 0 7px;color:#c6d3e9;font-size:13px;font-weight:650}input,textarea,select{width:100%;background:#090f1e;color:var(--text);border:1px solid #2c3a58;border-radius:12px;padding:12px 13px;font:inherit;outline:none}input:focus,textarea:focus{border-color:#73dff0;box-shadow:0 0 0 3px #6ee7f91a}textarea{min-height:100px;resize:vertical}.row{display:flex;gap:10px}.row>*{flex:1;min-width:0}.btn{border:0;border-radius:12px;padding:11px 15px;background:linear-gradient(135deg,#6ee7f9,#8a9cff);color:#091223;font-weight:800;font:inherit;cursor:pointer;transition:transform .15s,filter .15s}.btn:hover{filter:brightness(1.07);transform:translateY(-1px)}.btn.secondary{background:#1a2741;color:#eaf1ff;border:1px solid #344463}.btn.ghost{background:transparent;border:1px solid #344463;color:#c7d4ec}.btn:disabled{opacity:.55;cursor:wait;transform:none}.wide{width:100%;margin-top:12px}.notice{font-size:12px;color:var(--muted);margin:10px 0 0}.keybox{display:none;margin-top:12px;padding:12px;border:1px solid #2b735b;background:#102923;border-radius:12px}.keybox code{display:block;overflow-wrap:anywhere;color:#8cf2bd;margin-bottom:10px}.keyactions{display:flex;gap:8px}.keyactions button{flex:1}.output{background:#080e1b;border:1px solid #283653;border-radius:12px;padding:13px;white-space:pre-wrap;overflow-wrap:anywhere;color:#cbd9f2;font:12px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;max-height:320px;overflow:auto}.output.empty{color:#7f90ac}.searchbar{display:flex;gap:10px}.searchbar input{flex:1}.searchbar button{min-width:130px}.chips{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.chip{font-size:12px;color:#bdcce4;background:#17233b;border:1px solid #2c3d5d;border-radius:999px;padding:5px 9px}.results{display:grid;gap:10px;margin-top:14px}.result{border:1px solid #293753;background:#0b1222;border-radius:14px;padding:14px}.result h3{font-size:15px;margin:0 0 6px}.result h3 a{color:#9bdcfb;text-decoration:none}.result h3 a:hover{text-decoration:underline}.result p{font-size:13px;color:#adbad1;margin:0 0 8px}.meta{display:flex;gap:8px;flex-wrap:wrap;color:#7e92b3;font-size:11px}.empty-state{text-align:center;padding:30px 15px;color:#91a1bd;border:1px dashed #30405f;border-radius:14px}.foot{text-align:center;color:#71809b;font-size:12px;margin-top:24px}.hidden{display:none!important}.small{font-size:12px;color:var(--muted)}@media(max-width:800px){.layout{grid-template-columns:1fr}.panel.full{grid-column:auto}.wrap{padding:18px 13px 40px}.panel{padding:17px}.top{margin-bottom:24px}.hero h1{letter-spacing:-1px}.row{flex-direction:column}.searchbar{flex-direction:column}.searchbar button{width:100%}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><div class="logo">⌕</div><div>SearchPilot <span style="color:#7c9cff">AI</span><div class="small">WEB SEARCH API · v3</div></div></div>
+    <div class="status" id="health">● Đang kiểm tra máy chủ</div>
+  </header>
+  <section class="hero">
+    <div class="eyebrow">MULTI-SOURCE SEARCH ENGINE</div>
+    <h1>Tìm kiếm web, <span>trao quyền cho AI.</span></h1>
+    <p>Tạo API key, thử tìm kiếm trên nhiều nguồn và sao chép prompt hướng dẫn để tích hợp công cụ này vào bot AI của bạn.</p>
+  </section>
+
+  <main class="layout">
+    <section class="panel">
+      <div class="panel-head"><div class="step">01</div><div><h2>Tạo API key</h2><div class="sub">Dùng key để cho phép bot gọi API tìm kiếm</div></div></div>
+      <label class="field" for="keyName">Tên key / bot</label>
+      <input id="keyName" maxlength="80" placeholder="Ví dụ: Discord AI Assistant">
+      <button class="btn wide" id="createKey">✦ Tạo API key</button>
+      <div class="keybox" id="keyBox"><div class="small">API key mới — hãy lưu lại ngay</div><code id="keyValue"></code><div class="keyactions"><button class="btn" id="copyKey">Sao chép key</button><button class="btn secondary" id="useKey">Dùng để thử tìm kiếm</button></div></div>
+      <label class="field" for="apiKey">API key hiện có</label>
+      <input id="apiKey" type="password" autocomplete="off" placeholder="ws_...">
+      <p class="notice">Key chỉ hiển thị đầy đủ một lần khi tạo. Không gửi key công khai hoặc đưa vào mã frontend của website khác.</p>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><div class="step">02</div><div><h2>Tìm kiếm thử</h2><div class="sub">Kiểm tra API trực tiếp trên trang này</div></div></div>
+      <label class="field" for="query">Bạn muốn tìm gì?</label>
+      <div class="searchbar"><input id="query" placeholder="Ví dụ: tin AI mới nhất tại Việt Nam"><button class="btn" id="searchBtn">⌕ Tìm kiếm</button></div>
+      <div class="chips"><span class="chip">DuckDuckGo</span><span class="chip">Wikipedia tiếng Việt</span><span class="chip">Google News</span><span class="chip">Gộp & lọc trùng</span></div>
+      <div id="searchStatus" class="small">Nhập API key và từ khóa để bắt đầu.</div>
+    </section>
+
+    <section class="panel full">
+      <div class="panel-head"><div class="step">03</div><div><h2>Kết quả tìm kiếm</h2><div class="sub">Mở nguồn gốc để kiểm chứng thông tin trước khi AI trả lời</div></div></div>
+      <div id="results" class="results"><div class="empty-state">Kết quả sẽ hiển thị tại đây sau khi bạn tìm kiếm.</div></div>
+    </section>
+
+    <section class="panel full">
+      <div class="panel-head"><div class="step">04</div><div><h2>Prompt hướng dẫn AI sử dụng API</h2><div class="sub">Tự sinh prompt có endpoint, header, cách gọi và quy tắc trích dẫn nguồn</div></div></div>
+      <label class="field" for="botType">AI/bot bạn muốn tích hợp</label>
+      <div class="row"><input id="botType" value="AI assistant" placeholder="Tên bot hoặc framework"><input id="apiUrl" value="" placeholder="URL API sẽ tự nhận theo website"></div>
+      <label class="field" for="extraPrompt">Yêu cầu thêm (không bắt buộc)</label>
+      <textarea id="extraPrompt" placeholder="Ví dụ: trả lời bằng tiếng Việt, ưu tiên nguồn mới, báo rõ khi không tìm thấy thông tin..."></textarea>
+      <div class="row" style="margin-top:12px"><button class="btn" id="generatePrompt">Tạo prompt hướng dẫn</button><button class="btn secondary" id="copyPrompt">Sao chép prompt</button></div>
+      <div class="output empty" id="promptOutput" style="margin-top:12px">Nhấn “Tạo prompt hướng dẫn” để tạo nội dung bạn có thể gửi cho AI lập trình hoặc cấu hình bot.</div>
+      <p class="notice">Prompt chỉ hướng dẫn AI cách tích hợp. Bot vẫn cần được cấp quyền gọi HTTP/API trong môi trường chạy của nó; chỉ sao chép prompt không tự cài đặt công cụ vào bot.</p>
+    </section>
+
+    <section class="panel full">
+      <div class="panel-head"><div class="step">05</div><div><h2>Thông tin tích hợp nhanh</h2><div class="sub">Dành cho người tự kết nối bằng code</div></div></div>
+      <div class="output" id="integration">GET /api/search?q=tu-khoa&limit=8
+Header: X-API-Key: ws_...
+
+Response JSON:
+{
+  "query": "tu-khoa",
+  "count": 1,
+  "results": [
+    { "title": "...", "url": "https://...", "snippet": "...", "source": "..." }
+  ],
+  "providers": { "...": { "ok": true, "count": 1 } },
+  "version": "3.0.0"
+}</div>
+      <button class="btn secondary wide" id="copyIntegration">Sao chép thông tin API</button>
+    </section>
+  </main>
+  <footer class="foot">SearchPilot AI · Giao diện và API cùng chạy trên Render Web Service · Kiểm chứng nguồn trước khi sử dụng</footer>
+</div>
+<script>
+const $ = (id) => document.getElementById(id);
+const baseUrl = location.origin;
+$('apiUrl').value = baseUrl;
+$('health').textContent = '● Đang kiểm tra máy chủ';
+fetch('/api/health').then(r=>r.ok?r.json():Promise.reject()).then(d=>{
+  $('health').textContent = '● Máy chủ hoạt động · v' + d.version;
+}).catch(()=>{$('health').textContent='● Không kết nối được API';$('health').style.color='#ff9aa8';});
+function apiKey(){return $('apiKey').value.trim();}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+async function copyText(text, button){
+  try{await navigator.clipboard.writeText(text);const old=button.textContent;button.textContent='Đã sao chép ✓';setTimeout(()=>button.textContent=old,1500);}
+  catch(e){const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();}
+}
+$('createKey').addEventListener('click',async()=>{
+  const btn=$('createKey');btn.disabled=true;btn.textContent='Đang tạo...';
+  try{
+    const res=await fetch('/api/keys',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:$('keyName').value.trim()})});
+    const data=await res.json();if(!res.ok)throw new Error(data.error||'Không tạo được API key');
+    $('keyValue').textContent=data.api_key;$('keyBox').style.display='block';$('apiKey').value=data.api_key;
+    $('searchStatus').textContent='API key đã được tạo. Hãy lưu key lại ngay.';
+  }catch(e){alert(e.message);}
+  finally{btn.disabled=false;btn.textContent='✦ Tạo API key';}
+});
+$('copyKey').addEventListener('click',()=>copyText($('keyValue').textContent,$('copyKey')));
+$('useKey').addEventListener('click',()=>{$('apiKey').value=$('keyValue').textContent;$('query').focus();});
+async function doSearch(){
+  const q=$('query').value.trim(), key=apiKey(), btn=$('searchBtn');
+  if(!key){$('searchStatus').textContent='Hãy nhập hoặc tạo API key trước.';return;}
+  if(!q){$('searchStatus').textContent='Hãy nhập từ khóa tìm kiếm.';return;}
+  btn.disabled=true;btn.textContent='Đang tìm...';$('searchStatus').textContent='Đang hỏi các nguồn tìm kiếm...';
+  $('results').innerHTML='<div class="empty-state">Đang tìm kiếm. Các nguồn có thể phản hồi với tốc độ khác nhau.</div>';
+  try{
+    const url=new URL('/api/search',baseUrl);url.searchParams.set('q',q);url.searchParams.set('limit','8');
+    const res=await fetch(url,{headers:{'X-API-Key':key}});const data=await res.json();
+    if(!res.ok)throw new Error(data.error||'Lỗi API');
+    const providers=Object.entries(data.providers||{}).map(([n,v])=>`${n}: ${v.ok?'OK ('+v.count+')':v.error}`).join(' · ');
+    $('searchStatus').textContent=`Tìm thấy ${data.count} kết quả. ${providers}`;
+    if(!data.results.length){$('results').innerHTML='<div class="empty-state">Không tìm thấy kết quả. Thử từ khóa khác hoặc kiểm tra nguồn tìm kiếm.</div>';return;}
+    $('results').innerHTML=data.results.map((r,i)=>`<article class="result"><h3><a href="${esc(r.url)}" target="_blank" rel="noopener noreferrer">${i+1}. ${esc(r.title)}</a></h3><p>${esc(r.snippet||'Chưa có mô tả.')} </p><div class="meta"><span>${esc(r.source)}</span><span>·</span><span>${esc(new URL(r.url).hostname)}</span></div></article>`).join('');
+  }catch(e){$('searchStatus').textContent='Lỗi: '+e.message;$('results').innerHTML='<div class="empty-state">Không thể tìm kiếm. Kiểm tra API key, giới hạn yêu cầu hoặc thử lại sau.</div>';}
+  finally{btn.disabled=false;btn.textContent='⌕ Tìm kiếm';}
+}
+$('searchBtn').addEventListener('click',doSearch);$('query').addEventListener('keydown',e=>{if(e.key==='Enter')doSearch();});
+function buildPrompt(){
+ const endpoint=($('apiUrl').value.trim()||baseUrl).replace(/\/+$/,'');
+ const bot=$('botType').value.trim()||'AI assistant';
+ const extra=$('extraPrompt').value.trim();
+ return `Bạn là ${bot}. Hãy tích hợp và sử dụng công cụ tìm kiếm web SearchPilot AI dưới đây khi cần thông tin mới, thông tin có thể thay đổi, hoặc khi người dùng yêu cầu tra cứu nguồn.\n\nAPI BASE URL: ${endpoint}\nENDPOINT: GET ${endpoint}/api/search?q=<URL_ENCODED_QUERY>&limit=8\nAUTHENTICATION: gửi HTTP header X-API-Key: <API_KEY_CUA_NGUOI_DUNG>\nHEALTH CHECK: GET ${endpoint}/api/health\n\nCÁCH SỬ DỤNG:\n1. Khi cần tìm web, gọi GET /api/search, truyền từ khóa qua tham số q và số kết quả limit (1–10).\n2. Gửi API key trong header X-API-Key. Không nhúng key vào URL, không hiển thị key trong câu trả lời, log công khai hoặc mã frontend.\n3. Đọc JSON trả về. Dùng trường results[].title, results[].url, results[].snippet, results[].source để tổng hợp.\n4. Ưu tiên nguồn liên quan trực tiếp; mở/kiểm chứng liên kết gốc nếu môi trường của bạn hỗ trợ truy cập web. Không bịa nội dung mà nguồn không nói.\n5. Khi trả lời dựa trên tìm kiếm, đưa liên kết nguồn rõ ràng và phân biệt dữ kiện xác nhận được với suy luận. Nếu không có kết quả hoặc provider lỗi, nói rõ và thử truy vấn khác.\n6. Xử lý lỗi HTTP 401 bằng cách yêu cầu người quản trị kiểm tra API key; 429 bằng cách chờ rồi thử lại; lỗi mạng/502 bằng cách thử lại có giới hạn.\n7. Không gọi tìm kiếm cho mọi câu hỏi đơn giản nếu kiến thức sẵn có đã đủ; hãy tìm web khi tính cập nhật hoặc bằng chứng nguồn quan trọng.\n\nVÍ DỤ CURL:\ncurl -G '${endpoint}/api/search' --data-urlencode 'q=trí tuệ nhân tạo mới nhất' --data-urlencode 'limit=8' -H 'X-API-Key: <API_KEY_CUA_NGUOI_DUNG>'\n\nLƯU Ý TRIỂN KHAI: Prompt này là hướng dẫn cho AI/lập trình viên, không tự cấp quyền công cụ. Hãy cấu hình môi trường chạy của bot để thực hiện HTTP request, lưu API key trong biến môi trường hoặc kho bí mật và không gửi key cho người dùng khác.\n${extra ? '\\nYÊU CẦU BỔ SUNG:\\n'+extra : ''}`;
+}
+$('generatePrompt').addEventListener('click',()=>{$('promptOutput').textContent=buildPrompt();$('promptOutput').classList.remove('empty');});
+$('copyPrompt').addEventListener('click',()=>{const p=$('promptOutput').textContent;if(p.startsWith('Nhấn “Tạo prompt')){$('promptOutput').textContent=buildPrompt();$('promptOutput').classList.remove('empty');}copyText($('promptOutput').textContent,$('copyPrompt'));});
+$('copyIntegration').addEventListener('click',()=>copyText($('integration').textContent,$('copyIntegration')));
+</script>
+</body>
+</html>
