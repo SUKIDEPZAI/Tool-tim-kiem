@@ -1,45 +1,44 @@
-# SearchPilot AI v3 — giao diện + API trên cùng Render Web Service
+# SearchPilot AI v5 — Deep GitHub & Code Search
+
+## Tính năng
+- Giao diện + API trong cùng Render Web Service.
+- GitHub repository search chạy nhiều truy vấn bổ sung: tìm theo tên/mô tả/README index và truy vấn `stars:0..5` để không bỏ qua dự án nhỏ.
+- Sourcegraph public indexed-code search để tìm các file/đoạn mã khi dịch vụ công khai khả dụng.
+- Kết quả repository gồm URL, description, ngôn ngữ, stars, forks, kích thước, topics, license, created/updated, archived.
+- Cache ngắn hạn để giảm request lặp lại; trạng thái provider hiển thị rõ.
+- Không yêu cầu API key tìm kiếm bên thứ ba. API key do chính SearchPilot tạo để bảo vệ endpoint của website.
 
 ## Cấu trúc
 ```text
-web-search-bot-v3/
+searchpilot-ai-v5/
 ├── app.py
 ├── requirements.txt
 ├── Procfile
 ├── render.yaml
 ├── .gitignore
-└── static/
-    └── index.html
+└── static/index.html
 ```
 
-## Triển khai trên Render
-1. Đưa toàn bộ nội dung thư mục này lên thư mục gốc của GitHub repository.
-2. Render → New → Web Service → kết nối repository.
-3. Runtime: Python.
-4. Root Directory: để trống nếu các file ở gốc repo.
-5. Build Command: `pip install -r requirements.txt`
-6. Start Command: `gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --threads 4 --timeout 60`
-7. Deploy.
-
-Sau deploy, mở URL Render gốc. `/` hiển thị giao diện; `/api/health`, `/api/keys`, `/api/search` là API.
+## Deploy Render
+Upload toàn bộ nội dung thư mục lên gốc repo GitHub.
+- Root Directory: để trống
+- Build: `pip install -r requirements.txt`
+- Start: `gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --threads 4 --timeout 60`
+- Health check: `/api/health`
 
 ## API
 - `GET /api/health`
-- `POST /api/keys` JSON: `{"name":"Tên bot"}` (giới hạn 5 lần/giờ theo IP)
-- `GET /api/search?q=tu-khoa&limit=8` với header `X-API-Key: ws_...`
+- `POST /api/keys` JSON `{"name":"My bot"}`
+- `GET /api/search?q=esp32+nat+router&limit=30&mode=github`
+- Header `X-API-Key: ws_...`
 
-Ví dụ:
-```bash
-curl -G 'https://YOUR-SERVICE.onrender.com/api/search' \
-  --data-urlencode 'q=trí tuệ nhân tạo' \
-  --data-urlencode 'limit=8' \
-  -H 'X-API-Key: ws_YOUR_KEY'
-```
+Modes: `github`, `code`, `all`, `web`, `news`, `technical`, `academic`, `knowledge`.
 
-## Lưu ý quan trọng
-- API key chỉ hiện một lần lúc tạo; server chỉ lưu SHA-256 hash. Hãy sao chép và cất giữ an toàn.
-- SQLite trên ổ đĩa tạm của Render có thể mất dữ liệu khi redeploy/restart hoặc instance thay đổi. Để lưu key bền vững, gắn Persistent Disk và đặt `DATABASE_PATH` vào đường dẫn trên disk, hoặc chuyển sang PostgreSQL.
-- Giới hạn theo IP dùng bộ nhớ mặc định; với nhiều worker/instance hãy cấu hình Redis bằng `RATELIMIT_STORAGE_URI`.
-- Các website tìm kiếm công khai có thể thay đổi cấu trúc hoặc giới hạn request; nguồn nào lỗi sẽ được báo trong `providers`, các nguồn còn lại vẫn có thể trả kết quả.
-- Prompt tạo trên giao diện chỉ hướng dẫn AI cách gọi API; bot cần được lập trình/cấu hình để gửi HTTP request và có quyền truy cập API key.
-- Không đưa API key bí mật vào frontend công khai, prompt công khai hoặc kho GitHub.
+## Giới hạn quan trọng
+- GitHub anonymous API có giới hạn. Search endpoints có hạn mức nghiêm ngặt hơn; nếu 403/429, chờ reset và không retry liên tục.
+- Search repository tìm dựa trên metadata/tên/mô tả/README được GitHub index, không trả toàn bộ repository code.
+- Sourcegraph chỉ tìm code trong phạm vi index/khả năng truy cập của dịch vụ; nó không bao phủ mọi repository hay mọi nhánh.
+- “Tất cả dự án, dù nhỏ đến đâu” không thể bảo đảm tuyệt đối. Bản này cố ý thêm truy vấn `stars:0..5`, nhưng vẫn bị giới hạn bởi index, truy vấn, quota và kết quả trả về.
+- Trước khi tích hợp dự án vào ứng dụng, hãy kiểm tra license, dependencies, bảo mật, bảo trì và khả năng tương thích. Không tự động nhập toàn bộ mã nguồn của dự án vào sản phẩm.
+- SQLite trên ổ đĩa tạm có thể mất dữ liệu sau restart/redeploy. Dùng Persistent Disk với `DATABASE_PATH` hoặc PostgreSQL để lưu key bền vững.
+- Rate limiting mặc định dùng memory; với nhiều instance cấu hình Redis qua `RATELIMIT_STORAGE_URI`.
